@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create SMS</title>
+    <script>
+    </script>
+</head>
+
+<body>
+    <form id="the-form">
+        Steps:
+        <ol>
+            <li>
+                <label>
+                    Tel #:
+                    <input name="tel" type="tel" value="123-456-789" required />
+                </label>
+            </li>
+            <li>
+                <label>
+                    Message Body: <br />
+                    <textarea name="body" type="text">
+                        Hello!
+                    </textarea>
+                </label>
+            </li>
+            <li>
+                <input type="submit" value="Create the link/URI" />
+            </li>
+        </ol>
+    </form>
+    <div id="the-output">
+        <span id="the-span" style="display: none; color: orange;">
+            Warning: the message body might or might not be effective,
+            depending on the platform on which the link is clicked.
+        </span>
+        <pre id="the-pre"></pre>
+        <div id="the-div"></div>
+    </div>
+    <script>
+        let theForm = document.querySelector("#the-form");
+        let theOutput = document.querySelector("#the-output");
+        let theSpan = document.querySelector("#the-span");
+        let thePre = document.querySelector("#the-pre");
+        let theDiv = document.querySelector("#the-div");
+        theForm.oninput = (e) => {
+            theOutput.style.opacity = "30%"
+            theOutput.style.filter = "grayscale(100%)";
+        }
+        theForm.onsubmit = (e) => {
+            e.preventDefault();
+            let theFormData = new FormData(theForm);
+            let tel = theFormData.get("tel");
+            let body = theFormData.get("body");
+            theOutput.style.opacity = "100%"
+            theOutput.style.filter = "unset";
+            let bodyPartOfHref;
+            [theSpan.style.display, bodyPartOfHref] = ((body === "")
+                ? ["none", ""]
+                : ["inherit", `?&body=${encodeURIComponent(body)}`]);
+            let href = `sms://${tel}${bodyPartOfHref}`;
+            thePre.innerText = href;
+            theDiv.innerHTML = `<a href="${href}">the link</a>`;
+        }
+    </script>
+</body>
+
+</html>
